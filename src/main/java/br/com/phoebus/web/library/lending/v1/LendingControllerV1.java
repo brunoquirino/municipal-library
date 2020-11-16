@@ -10,7 +10,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/lendings", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-public class LendingController {
+public class LendingControllerV1 {
 
     private final CreateLendingService createLedingService;
     private final UpdateLendingService updateLedingService;
@@ -19,27 +19,27 @@ public class LendingController {
     private final ListLendingService listLedingService;
 
     @GetMapping
-    public List<LendingDTO> listAll() {
+    public List<LendingDtoV1> listAll() {
         return listLedingService.listAll();
     }
 
     @GetMapping(value = "/{id}")
-    public LendingDTO get(@PathVariable("id") Long id) {
+    public LendingDtoV1 get(@PathVariable("id") Long id) {
         return getLedingService.get(id);
     }
 
     @PostMapping
-    public LendingDTO create(@RequestBody LendingDTO lendingDTO) throws Exception {
-        return createLedingService.create(lendingDTO);
+    public LendingDtoV1 create(@RequestBody LendingDtoV1 lendingDtoV1) throws Exception {
+        return createLedingService.create(lendingDtoV1);
     }
 
     @DeleteMapping
-    public void delete(@RequestBody LendingDTO lendingDTO) throws Exception {
-        deleteLedingService.delete(lendingDTO);
+    public void delete(@RequestBody LendingDtoV1 lendingDtoV1) throws Exception {
+        deleteLedingService.delete(lendingDtoV1);
     }
 
     @PutMapping
-    public void update(@RequestBody LendingDTO lendingDTO) throws Exception {
-        updateLedingService.update(lendingDTO);
+    public void update(@RequestBody LendingDtoV1 lendingDtoV1) throws Exception {
+        updateLedingService.update(lendingDtoV1);
     }
 }

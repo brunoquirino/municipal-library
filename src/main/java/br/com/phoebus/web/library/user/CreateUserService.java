@@ -1,9 +1,9 @@
 package br.com.phoebus.web.library.user;
 
-import br.com.phoebus.web.library.user.v1.UserDTO;
+import br.com.phoebus.web.library.user.v1.UserDtoV1;
 
 @FunctionalInterface
 public interface CreateUserService {
 
-    UserDTO create(UserDTO userDTO) throws Exception;
+    UserDtoV1 create(UserDtoV1 userDtoV1) throws Exception;
 }

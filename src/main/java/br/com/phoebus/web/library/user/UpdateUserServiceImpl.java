@@ -1,6 +1,6 @@
 package br.com.phoebus.web.library.user;
 
-import br.com.phoebus.web.library.user.v1.UserDTO;
+import br.com.phoebus.web.library.user.v1.UserDtoV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,12 +13,12 @@ public class UpdateUserServiceImpl implements UpdateUserService {
 
     @Transactional
     @Override
-    public void update(UserDTO userDTO) throws Exception {
+    public void update(UserDtoV1 userDtoV1) throws Exception {
         User user = new User();
-        user.setId(userDTO.getId());
-        user.setName(userDTO.getName());
-        user.setAge(userDTO.getAge());
-        user.setPhone(userDTO.getPhone());
+        user.setId(userDtoV1.getId());
+        user.setName(userDtoV1.getName());
+        user.setAge(userDtoV1.getAge());
+        user.setPhone(userDtoV1.getPhone());
 
         userRepository.save(user);
     }

@@ -1,6 +1,6 @@
 package br.com.phoebus.web.library.book;
 
-import br.com.phoebus.web.library.book.v1.BookDTO;
+import br.com.phoebus.web.library.book.v1.BookDtoV1;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -11,7 +11,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -23,15 +22,16 @@ public class UpdateBookServiceTest {
     @Test
     @DisplayName("Deve alterar um book")
     void create() throws Exception {
-        BookDTO bookDTO = new BookDTO(1l);
-        bookDTO.setTitle("A Pedra do Reino");
-        bookDTO.setSummary("Romance d'A Pedra do Reino e o Príncipe do Sangue ...");
-        bookDTO.setAuthor("Ariano Suassuna");
-        bookDTO.setIsbn("ABC123456");
-        bookDTO.setYear(1950);
+        BookDtoV1 bookDtoV1 = new BookDtoV1();
+        bookDtoV1.setId(1l);
+        bookDtoV1.setTitle("A Pedra do Reino");
+        bookDtoV1.setSummary("Romance d'A Pedra do Reino e o Príncipe do Sangue ...");
+        bookDtoV1.setAuthor("Ariano Suassuna");
+        bookDtoV1.setIsbn("ABC123456");
+        bookDtoV1.setYear(1950);
 
-        doNothing().when(updateBookService).update(bookDTO);
+        doNothing().when(updateBookService).update(bookDtoV1);
 
-        updateBookService.update(bookDTO);
+        updateBookService.update(bookDtoV1);
     }
 }

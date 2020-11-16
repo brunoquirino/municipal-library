@@ -1,9 +1,9 @@
 package br.com.phoebus.web.library.user;
 
-import br.com.phoebus.web.library.user.v1.UserDTO;
+import br.com.phoebus.web.library.user.v1.UserDtoV1;
 
 @FunctionalInterface
 public interface GetUserService {
 
-    UserDTO get(Long id);
+    UserDtoV1 get(Long id);
 }

@@ -1,6 +1,6 @@
 package br.com.phoebus.web.library.user;
 
-import br.com.phoebus.web.library.user.v1.UserDTO;
+import br.com.phoebus.web.library.user.v1.UserDtoV1;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -20,11 +20,12 @@ public class DeleteUserServiceTest {
     @Test
     @DisplayName("Deve deletar um user")
     void delete() throws Exception {
-        UserDTO userDTO = new UserDTO(1l);
+        UserDtoV1 userDtoV1 = new UserDtoV1();
+        userDtoV1.setId(1l);
 
         assertNotNull(this.deleteUserService);
-        doNothing().when(this.deleteUserService).delete(userDTO);
+        doNothing().when(this.deleteUserService).delete(userDtoV1);
 
-        this.deleteUserService.delete(userDTO);
+        this.deleteUserService.delete(userDtoV1);
     }
 }

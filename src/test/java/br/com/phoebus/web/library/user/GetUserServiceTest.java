@@ -1,6 +1,6 @@
 package br.com.phoebus.web.library.user;
 
-import br.com.phoebus.web.library.user.v1.UserDTO;
+import br.com.phoebus.web.library.user.v1.UserDtoV1;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -23,7 +23,7 @@ public class GetUserServiceTest {
     @Test
     @DisplayName("Deve retornar um user por id")
     void getUser() throws Exception {
-        UserDTO user = new UserDTO();
+        UserDtoV1 user = new UserDtoV1();
         user.setId(1l);
         user.setName("Teste");
         user.setAge(30);
@@ -32,11 +32,11 @@ public class GetUserServiceTest {
         assertNotNull(getUserService);
         when(getUserService.get(1l)).thenReturn(user);
 
-        final UserDTO userDTO = getUserService.get(1l);
+        final UserDtoV1 userDtoV1 = getUserService.get(1l);
         assertAll("user",
-                () -> assertThat(userDTO.getId(), is(user.getId())),
-                () -> assertThat(userDTO.getName(), is(user.getName())),
-                () -> assertThat(userDTO.getAge(), is(user.getAge())),
-                () -> assertThat(userDTO.getPhone(), is(user.getPhone())));
+                () -> assertThat(userDtoV1.getId(), is(user.getId())),
+                () -> assertThat(userDtoV1.getName(), is(user.getName())),
+                () -> assertThat(userDtoV1.getAge(), is(user.getAge())),
+                () -> assertThat(userDtoV1.getPhone(), is(user.getPhone())));
     }
 }

@@ -1,7 +1,7 @@
 package br.com.phoebus.web.library.lending;
 
-import br.com.phoebus.web.library.book.v1.BookDTO;
-import br.com.phoebus.web.library.lending.v1.LendingDTO;
+import br.com.phoebus.web.library.book.v1.BookDtoV1;
+import br.com.phoebus.web.library.lending.v1.LendingDtoV1;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -26,19 +26,22 @@ public class ListLendingServiceTest {
     @Test
     @DisplayName("Deve obter um emprestimo por id")
     void create() throws Exception {
-        List<LendingDTO> list = Arrays.asList(getLendingDTO());
+        List<LendingDtoV1> list = Arrays.asList(getLendingDTO());
         when(listLendingService.listAll()).thenReturn(list);
 
-        final List<LendingDTO> lendings = listLendingService.listAll();
+        final List<LendingDtoV1> lendings = listLendingService.listAll();
         assertAll("lendings", () -> assertThat(lendings.size(), is(1)));
     }
 
-    private LendingDTO getLendingDTO() {
-        LendingDTO lendingDTO = new LendingDTO(1l);
-        lendingDTO.setUserID(1l);
-        lendingDTO.setDays(7);
-        lendingDTO.setBooks(Arrays.asList(new BookDTO(1l)));
+    private LendingDtoV1 getLendingDTO() {
+        LendingDtoV1 lendingDtoV1 = new LendingDtoV1();
+        lendingDtoV1.setId(1l);
+        lendingDtoV1.setUserID(1l);
+        lendingDtoV1.setDays(7);
+        BookDtoV1 bookDtoV1 = new BookDtoV1();
+        bookDtoV1.setId(1l);
+        lendingDtoV1.setBooks(Arrays.asList(bookDtoV1));
 
-        return lendingDTO;
+        return lendingDtoV1;
     }
 }

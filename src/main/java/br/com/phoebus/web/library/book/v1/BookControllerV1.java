@@ -2,7 +2,6 @@ package br.com.phoebus.web.library.book.v1;
 
 import br.com.phoebus.web.library.book.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +11,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/books", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-public class BookController {
+public class BookControllerV1 {
 
     private final CreateBookService createBookService;
     private final ListBookService listBookService;
@@ -21,30 +20,30 @@ public class BookController {
     private final GetBookService getBookService;
 
     @PostMapping
-    public BookDTO create(@RequestBody BookDTO bookDTO) throws Exception {
-        return createBookService.create(bookDTO);
+    public BookDtoV1 create(@RequestBody BookDtoV1 bookDtoV1) throws Exception {
+        return createBookService.create(bookDtoV1);
     }
 
     @GetMapping
-    public List<BookDTO> listAll() {
+    public List<BookDtoV1> listAll() {
         return listBookService.listAll();
     }
 
     @GetMapping(value = "/{id}")
-    public BookDTO get(@PathVariable("id") Long id) {
+    public BookDtoV1 get(@PathVariable("id") Long id) {
         return getBookService.get(id);
     }
 
     @Transactional
     @DeleteMapping
-    public void delete(@RequestBody BookDTO bookDTO) throws Exception {
-        deleteBookService.delete(bookDTO);
+    public void delete(@RequestBody BookDtoV1 bookDtoV1) throws Exception {
+        deleteBookService.delete(bookDtoV1);
     }
 
     @Transactional
     @PutMapping
-    public void update(@RequestBody BookDTO bookDTO) throws Exception {
-        updateBookService.update(bookDTO);
+    public void update(@RequestBody BookDtoV1 bookDtoV1) throws Exception {
+        updateBookService.update(bookDtoV1);
     }
 }
 

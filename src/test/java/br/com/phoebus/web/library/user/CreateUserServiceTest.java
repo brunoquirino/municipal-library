@@ -1,6 +1,6 @@
 package br.com.phoebus.web.library.user;
 
-import br.com.phoebus.web.library.user.v1.UserDTO;
+import br.com.phoebus.web.library.user.v1.UserDtoV1;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -22,22 +22,22 @@ public class CreateUserServiceTest {
     @Test
     @DisplayName("Deve incluir um user")
     void create() throws Exception {
-        UserDTO userDTO = getUserDTO();
-        UserDTO userDTOReturn = getUserDTO();
-        userDTOReturn.setId(1l);
+        UserDtoV1 userDtoV1 = getUserDTO();
+        UserDtoV1 userDtoV1Return = getUserDTO();
+        userDtoV1Return.setId(1l);
 
-        when(createUserService.create(userDTO)).thenReturn(userDTOReturn);
+        when(createUserService.create(userDtoV1)).thenReturn(userDtoV1Return);
 
-        UserDTO user = createUserService.create(userDTO);
+        UserDtoV1 user = createUserService.create(userDtoV1);
         assertAll("user",
-                () -> assertThat(user.getId(), is(userDTOReturn.getId())),
-                () -> assertThat(user.getName(), is(userDTOReturn.getName())),
-                () -> assertThat(user.getAge(), is(userDTOReturn.getAge())),
-                () -> assertThat(user.getPhone(), is(userDTOReturn.getPhone())));
+                () -> assertThat(user.getId(), is(userDtoV1Return.getId())),
+                () -> assertThat(user.getName(), is(userDtoV1Return.getName())),
+                () -> assertThat(user.getAge(), is(userDtoV1Return.getAge())),
+                () -> assertThat(user.getPhone(), is(userDtoV1Return.getPhone())));
     }
 
-    private UserDTO getUserDTO() {
-        UserDTO user = new UserDTO();
+    private UserDtoV1 getUserDTO() {
+        UserDtoV1 user = new UserDtoV1();
         user.setName("Teste");
         user.setAge(30);
         user.setPhone("88888888888888");

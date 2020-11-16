@@ -1,6 +1,6 @@
 package br.com.phoebus.web.library.book;
 
-import br.com.phoebus.web.library.book.v1.BookDTO;
+import br.com.phoebus.web.library.book.v1.BookDtoV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,13 +14,13 @@ public class ListBookServiceImpl implements ListBookService {
     private final BookRepository repository;
 
     @Override
-    public List<BookDTO> listAll() {
+    public List<BookDtoV1> listAll() {
         List<Book> books = (List<Book>) repository.findAll();
-        List<BookDTO> booksTo = new ArrayList<BookDTO>();
+        List<BookDtoV1> booksTo = new ArrayList<BookDtoV1>();
         for (Book book : books) {
-            BookDTO bookDTO = new BookDTO(book);
+            BookDtoV1 bookDtoV1 = BookDtoV1.from(book);
 
-            booksTo.add(bookDTO);
+            booksTo.add(bookDtoV1);
         }
 
         return booksTo;

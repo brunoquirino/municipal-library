@@ -1,6 +1,6 @@
 package br.com.phoebus.web.library.book;
 
-import br.com.phoebus.web.library.book.v1.BookDTO;
+import br.com.phoebus.web.library.book.v1.BookDtoV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,13 +13,13 @@ public class UpdateBookServiceImpl implements UpdateBookService {
 
     @Transactional
     @Override
-    public void update(BookDTO bookDTO) throws Exception {
-        Book book = bookRepository.findById(bookDTO.getId()).orElse(new Book());
-        book.setTitle(bookDTO.getTitle());
-        book.setSummary(bookDTO.getSummary());
-        book.setIsbn(bookDTO.getIsbn());
-        book.setAuthor(bookDTO.getAuthor());
-        book.setYear(bookDTO.getYear());
+    public void update(BookDtoV1 bookDtoV1) throws Exception {
+        Book book = bookRepository.findById(bookDtoV1.getId()).orElse(new Book());
+        book.setTitle(bookDtoV1.getTitle());
+        book.setSummary(bookDtoV1.getSummary());
+        book.setIsbn(bookDtoV1.getIsbn());
+        book.setAuthor(bookDtoV1.getAuthor());
+        book.setYear(bookDtoV1.getYear());
 
         bookRepository.save(book);
     }

@@ -27,13 +27,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UserControllerTest {
+public class UserControllerV1Test {
 
     @Autowired
     private MockMvc mockMvc;
 
     @Mock
-    private UserController userController;
+    private UserControllerV1 userControllerV1;
 
     @BeforeEach
     public void setUp() {
@@ -42,21 +42,21 @@ public class UserControllerTest {
     @Test
     @DisplayName("Deve incluir um usuário")
     void create() throws Exception {
-        UserDTO userDTO = getUserDTO();
-        UserDTO userDTOReturn = getUserDTO();
-        userDTOReturn.setId(1l);
+        UserDtoV1 userDtoV1 = getUserDTO();
+        UserDtoV1 userDtoV1Return = getUserDTO();
+        userDtoV1Return.setId(1l);
 
-        assertNotNull(userController);
-        when(userController.create(userDTO)).thenReturn(userDTOReturn);
+        assertNotNull(userControllerV1);
+        when(userControllerV1.create(userDtoV1)).thenReturn(userDtoV1Return);
 
-        UserDTO user = userController.create(userDTO);
+        UserDtoV1 user = userControllerV1.create(userDtoV1);
         assertAll("user",
                 () -> assertThat(user.getId(), is(1l)),
                 () -> assertThat(user.getName(), is("Teste")),
                 () -> assertThat(user.getAge(), is(30)),
                 () -> assertThat(user.getPhone(), is("88888888888888")));
 
-        String content = new Gson().toJson(userDTO);
+        String content = new Gson().toJson(userDtoV1);
         this.mockMvc.perform(post("/users")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(content))
@@ -68,11 +68,11 @@ public class UserControllerTest {
     @Test
     @DisplayName("Deve listar todos os usuários")
     void listAll() throws Exception {
-        assertNotNull(userController);
+        assertNotNull(userControllerV1);
 
-        when(userController.listAll()).thenReturn(new ArrayList<UserDTO>());
+        when(userControllerV1.listAll()).thenReturn(new ArrayList<UserDtoV1>());
 
-        final List<UserDTO> users = userController.listAll();
+        final List<UserDtoV1> users = userControllerV1.listAll();
         assertAll("users", () -> assertThat(users.size(), is(0)));
 
         this.mockMvc.perform(get("/users")
@@ -84,19 +84,19 @@ public class UserControllerTest {
     @Test
     @DisplayName("Deve retornar um user por ID")
     void getUser() throws  Exception {
-        UserDTO user = getUserDTO();
+        UserDtoV1 user = getUserDTO();
         user.setId(1l);
 
-        assertNotNull(userController);
-        when(userController.get(1l)).thenReturn(user);
+        assertNotNull(userControllerV1);
+        when(userControllerV1.get(1l)).thenReturn(user);
 
-        final UserDTO userDTO = userController.get(1l);
+        final UserDtoV1 userDtoV1 = userControllerV1.get(1l);
         assertAll("user",
-                () -> assertThat(userDTO.getId(), is(1l)),
-                () -> assertThat(userDTO.getName(), is("Teste")),
-                () -> assertThat(userDTO.getAge(), is(30)));
+                () -> assertThat(userDtoV1.getId(), is(1l)),
+                () -> assertThat(userDtoV1.getName(), is("Teste")),
+                () -> assertThat(userDtoV1.getAge(), is(30)));
 
-        String content = new Gson().toJson(new UserDTO());
+        String content = new Gson().toJson(new UserDtoV1());
         this.mockMvc.perform(get("/users/{id}", 1l)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -107,42 +107,45 @@ public class UserControllerTest {
     @Test
     @DisplayName("Deve deletar um user")
     void deleteUser() throws Exception {
-        UserDTO userDTO = new UserDTO(1l);
+        UserDtoV1 userDtoV1 = new UserDtoV1();
+        userDtoV1.setId(1l);
 
-        assertNotNull(this.userController);
-        when(this.userController.get(anyLong())).thenReturn(userDTO);
-        doNothing().when(this.userController).delete(userDTO);
+        assertNotNull(this.userControllerV1);
+        when(this.userControllerV1.get(anyLong())).thenReturn(userDtoV1);
+        doNothing().when(this.userControllerV1).delete(userDtoV1);
 
         this.mockMvc.perform(delete("/users")
-                .content(new Gson().toJson(userDTO))
+                .content(new Gson().toJson(userDtoV1))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        this.userController.delete(userDTO);
+        this.userControllerV1.delete(userDtoV1);
     }
 
     @Test
     @DisplayName("Deve alterar um user")
     void update() throws Exception {
-        UserDTO userDTO = getUserDTO();
-        userDTO.setId(1l);
+        UserDtoV1 userDtoV1 = getUserDTO();
+        userDtoV1.setId(1l);
 
-        assertNotNull(this.userController);
-        when(this.userController.get(1l)).thenReturn(new UserDTO(1l));
-        doNothing().when(this.userController).update(userDTO);
+        assertNotNull(this.userControllerV1);
+        UserDtoV1 value = new UserDtoV1();
+        value.setId(1l);
+        when(this.userControllerV1.get(1l)).thenReturn(value);
+        doNothing().when(this.userControllerV1).update(userDtoV1);
 
-        this.userController.update(userDTO);
+        this.userControllerV1.update(userDtoV1);
 
         this.mockMvc.perform(put("/users")
-                .content(new Gson().toJson(userDTO))
+                .content(new Gson().toJson(userDtoV1))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
 
-    private UserDTO getUserDTO() {
-        UserDTO user = new UserDTO();
+    private UserDtoV1 getUserDTO() {
+        UserDtoV1 user = new UserDtoV1();
         user.setName("Teste");
         user.setAge(30);
         user.setPhone("88888888888888");

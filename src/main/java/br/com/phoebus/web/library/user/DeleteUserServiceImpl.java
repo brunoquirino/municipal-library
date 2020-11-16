@@ -1,6 +1,6 @@
 package br.com.phoebus.web.library.user;
 
-import br.com.phoebus.web.library.user.v1.UserDTO;
+import br.com.phoebus.web.library.user.v1.UserDtoV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,9 +13,9 @@ public class DeleteUserServiceImpl implements DeleteUserService {
 
     @Transactional
     @Override
-    public void delete(UserDTO userDTO) throws Exception {
+    public void delete(UserDtoV1 userDtoV1) throws Exception {
         User user = new User();
-        user.setId(userDTO.getId());
+        user.setId(userDtoV1.getId());
 
         userRepository.delete(user);
     }

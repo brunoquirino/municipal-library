@@ -1,6 +1,6 @@
 package br.com.phoebus.web.library.book;
 
-import br.com.phoebus.web.library.book.v1.BookDTO;
+import br.com.phoebus.web.library.book.v1.BookDtoV1;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -25,15 +25,16 @@ public class ListBookServiceTest {
     @Test
     @DisplayName("Deve retornar uma lista de books")
     void list() throws Exception {
-        List<BookDTO> lista = Arrays.asList(getBookDTO());
+        List<BookDtoV1> lista = Arrays.asList(getBookDTO());
 
         when(listBookService.listAll()).thenReturn(lista);
-        List<BookDTO> books = listBookService.listAll();
+        List<BookDtoV1> books = listBookService.listAll();
         assertAll("books", () -> assertThat(books.size(), is(1)));
     }
 
-    private BookDTO getBookDTO() {
-        BookDTO bookTO = new BookDTO(1l);
+    private BookDtoV1 getBookDTO() {
+        BookDtoV1 bookTO = new BookDtoV1();
+        bookTO.setId(1l);
         bookTO.setTitle("A Pedra do Reino");
         bookTO.setSummary("Romance d'A Pedra do Reino e o Príncipe do Sangue ...");
         bookTO.setAuthor("Ariano Suassuna");

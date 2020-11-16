@@ -1,7 +1,7 @@
 package br.com.phoebus.web.library.lending;
 
-import br.com.phoebus.web.library.book.v1.BookDTO;
-import br.com.phoebus.web.library.lending.v1.LendingDTO;
+import br.com.phoebus.web.library.book.v1.BookDtoV1;
+import br.com.phoebus.web.library.lending.v1.LendingDtoV1;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -30,14 +30,16 @@ public class UpdateLendingServiceTest {
     @Test
     @DisplayName("Deve alterar um emprestimo")
     void update() throws Exception {
-        LendingDTO lendingDTO = new LendingDTO();
-        lendingDTO.setId(1l);
-        lendingDTO.setUserID(1l);
-        lendingDTO.setDays(7);
-        lendingDTO.setBooks(Arrays.asList(new BookDTO(1l)));
+        LendingDtoV1 lendingDtoV1 = new LendingDtoV1();
+        lendingDtoV1.setId(1l);
+        lendingDtoV1.setUserID(1l);
+        lendingDtoV1.setDays(7);
+        BookDtoV1 bookDtoV1 = new BookDtoV1();
+        bookDtoV1.setId(1l);
+        lendingDtoV1.setBooks(Arrays.asList(bookDtoV1));
 
         assertNotNull(this.updateLendingService);
-        when(this.getLendingService.get(1l)).thenReturn(lendingDTO);
-        doNothing().when(this.updateLendingService).update(lendingDTO);
+        when(this.getLendingService.get(1l)).thenReturn(lendingDtoV1);
+        doNothing().when(this.updateLendingService).update(lendingDtoV1);
     }
 }

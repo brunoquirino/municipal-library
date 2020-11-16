@@ -1,9 +1,9 @@
 package br.com.phoebus.web.library.user;
 
-import br.com.phoebus.web.library.user.v1.UserDTO;
+import br.com.phoebus.web.library.user.v1.UserDtoV1;
 
 @FunctionalInterface
 public interface DeleteUserService {
 
-    void delete(UserDTO userDTO) throws Exception;
+    void delete(UserDtoV1 userDtoV1) throws Exception;
 }

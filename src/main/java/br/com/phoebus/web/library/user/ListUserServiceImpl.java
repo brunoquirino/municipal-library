@@ -1,6 +1,6 @@
 package br.com.phoebus.web.library.user;
 
-import br.com.phoebus.web.library.user.v1.UserDTO;
+import br.com.phoebus.web.library.user.v1.UserDtoV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +14,12 @@ public class ListUserServiceImpl implements ListUserService {
     private final UserRepository userRepository;
 
     @Override
-    public List<UserDTO> listAll() {
+    public List<UserDtoV1> listAll() {
         List<User> users = (List<User>) userRepository.findAll();
-        List<UserDTO> list = new ArrayList<>();
+        List<UserDtoV1> list = new ArrayList<>();
         for (User user : users) {
-            UserDTO userDTO = new UserDTO(user);
-            list.add(userDTO);
+            UserDtoV1 userDtoV1 = UserDtoV1.from(user);
+            list.add(userDtoV1);
         }
 
         return list;

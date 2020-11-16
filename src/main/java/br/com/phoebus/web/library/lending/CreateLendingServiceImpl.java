@@ -2,8 +2,8 @@ package br.com.phoebus.web.library.lending;
 
 import br.com.phoebus.web.library.book.Book;
 import br.com.phoebus.web.library.book.BookRepository;
-import br.com.phoebus.web.library.book.v1.BookDTO;
-import br.com.phoebus.web.library.lending.v1.LendingDTO;
+import br.com.phoebus.web.library.book.v1.BookDtoV1;
+import br.com.phoebus.web.library.lending.v1.LendingDtoV1;
 import br.com.phoebus.web.library.user.User;
 import br.com.phoebus.web.library.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,22 +26,22 @@ public class CreateLendingServiceImpl implements CreateLendingService {
 
     @Transactional
     @Override
-    public LendingDTO create(LendingDTO lendingDTO) throws Exception {
+    public LendingDtoV1 create(LendingDtoV1 lendingDtoV1) throws Exception {
         Lending lending = new Lending();
-        lending.setDays(lendingDTO.getDays());
-        lending.setUserID(lendingDTO.getUserID());
+        lending.setDays(lendingDtoV1.getDays());
+        lending.setUserID(lendingDtoV1.getUserID());
         lending.setDateDelivery(LocalDate.now());
 
-        User user = userRepository.findById(lendingDTO.getUserID()).orElse(null);
+        User user = userRepository.findById(lendingDtoV1.getUserID()).orElse(null);
         if (user != null) {
             lending.setUser(user);
         } else {
-            throw new Exception(String.format("Usuário %d não encontrado!", lendingDTO.getUserID()));
+            throw new Exception(String.format("Usuário %d não encontrado!", lendingDtoV1.getUserID()));
         }
 
         List<Book> books = new ArrayList<Book>();
-        for (BookDTO bookDTO : lendingDTO.getBooks()) {
-            Book book = bookRepository.findById(bookDTO.getId()).orElse(null);
+        for (BookDtoV1 bookDtoV1 : lendingDtoV1.getBooks()) {
+            Book book = bookRepository.findById(bookDtoV1.getId()).orElse(null);
             if (book != null) {
                 book.setLending(lending);
                 books.add(book);
@@ -51,6 +51,6 @@ public class CreateLendingServiceImpl implements CreateLendingService {
 
         lending = lendingRepository.save(lending);
 
-        return new LendingDTO(lending);
+        return LendingDtoV1.from(lending);
     }
 }

@@ -1,6 +1,6 @@
 package br.com.phoebus.web.library.lending;
 
-import br.com.phoebus.web.library.lending.v1.LendingDTO;
+import br.com.phoebus.web.library.lending.v1.LendingDtoV1;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -22,9 +22,9 @@ public class DeleteLendingServiceTest {
     @Test
     @DisplayName("Deve deletar um emprestimo")
     void delete() throws Exception {
-        LendingDTO lendingDTO = new LendingDTO();
-        lendingDTO.setId(1l);
+        LendingDtoV1 lendingDtoV1 = new LendingDtoV1();
+        lendingDtoV1.setId(1l);
 
-        doNothing().when(this.deleteLendingService).delete(lendingDTO);
+        doNothing().when(this.deleteLendingService).delete(lendingDtoV1);
     }
 }

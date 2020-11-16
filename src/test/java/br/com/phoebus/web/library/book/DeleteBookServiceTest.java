@@ -1,6 +1,6 @@
 package br.com.phoebus.web.library.book;
 
-import br.com.phoebus.web.library.book.v1.BookDTO;
+import br.com.phoebus.web.library.book.v1.BookDtoV1;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -19,10 +19,11 @@ public class DeleteBookServiceTest {
     @Test
     @DisplayName("Deve deletar um book")
     void delete() throws Exception {
-        BookDTO bookDTO = new BookDTO(1l);
+        BookDtoV1 bookDtoV1 = new BookDtoV1();
+        bookDtoV1.setId(1l);
 
-        doNothing().when(deleteBookService).delete(bookDTO);
+        doNothing().when(deleteBookService).delete(bookDtoV1);
 
-        deleteBookService.delete(bookDTO);
+        deleteBookService.delete(bookDtoV1);
     }
 }

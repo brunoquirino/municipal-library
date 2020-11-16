@@ -1,6 +1,6 @@
 package br.com.phoebus.web.library.book;
 
-import br.com.phoebus.web.library.book.v1.BookDTO;
+import br.com.phoebus.web.library.book.v1.BookDtoV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,9 +13,9 @@ public class DeleteBookServiceImpl implements DeleteBookService {
 
     @Transactional
     @Override
-    public void delete(BookDTO bookDTO) throws Exception {
+    public void delete(BookDtoV1 bookDtoV1) throws Exception {
         Book book = new Book();
-        book.setId(bookDTO.getId());
+        book.setId(bookDtoV1.getId());
 
         bookRepository.delete(book);
     }

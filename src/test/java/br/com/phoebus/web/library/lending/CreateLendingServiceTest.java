@@ -1,7 +1,7 @@
 package br.com.phoebus.web.library.lending;
 
-import br.com.phoebus.web.library.book.v1.BookDTO;
-import br.com.phoebus.web.library.lending.v1.LendingDTO;
+import br.com.phoebus.web.library.book.v1.BookDtoV1;
+import br.com.phoebus.web.library.lending.v1.LendingDtoV1;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -25,13 +25,13 @@ public class CreateLendingServiceTest {
     @Test
     @DisplayName("Deve incluir um emprestimo")
     void create() throws Exception {
-        LendingDTO lendingDTO = getLendingDTO();
-        LendingDTO lendingReturn = getLendingDTO();
+        LendingDtoV1 lendingDtoV1 = getLendingDTO();
+        LendingDtoV1 lendingReturn = getLendingDTO();
         lendingReturn.setId(1l);
 
-        when(createLendingService.create(lendingDTO)).thenReturn(lendingReturn);
+        when(createLendingService.create(lendingDtoV1)).thenReturn(lendingReturn);
 
-        LendingDTO lending = createLendingService.create(lendingDTO);
+        LendingDtoV1 lending = createLendingService.create(lendingDtoV1);
         assertAll("lending",
                 () -> assertThat(lending.getId(), is(lendingReturn.getId())),
                 () -> assertThat(lending.getUserID(), is(lendingReturn.getUserID())),
@@ -39,12 +39,14 @@ public class CreateLendingServiceTest {
                 () -> assertThat(lending.getBooks().size(), is(lendingReturn.getBooks().size())));
     }
 
-    private LendingDTO getLendingDTO() {
-        LendingDTO lendingDTO = new LendingDTO();
-        lendingDTO.setUserID(1l);
-        lendingDTO.setDays(7);
-        lendingDTO.setBooks(Arrays.asList(new BookDTO(1l)));
+    private LendingDtoV1 getLendingDTO() {
+        LendingDtoV1 lendingDtoV1 = new LendingDtoV1();
+        lendingDtoV1.setUserID(1l);
+        lendingDtoV1.setDays(7);
+        BookDtoV1 bookDtoV1 = new BookDtoV1();
+        bookDtoV1.setId(1l);
+        lendingDtoV1.setBooks(Arrays.asList(bookDtoV1));
 
-        return lendingDTO;
+        return lendingDtoV1;
     }
 }

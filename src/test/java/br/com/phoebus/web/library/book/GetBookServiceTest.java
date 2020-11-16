@@ -1,6 +1,6 @@
 package br.com.phoebus.web.library.book;
 
-import br.com.phoebus.web.library.book.v1.BookDTO;
+import br.com.phoebus.web.library.book.v1.BookDtoV1;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -22,21 +22,22 @@ public class GetBookServiceTest {
     @Test
     @DisplayName("Deve retornar um book por id")
     void get() throws Exception {
-        BookDTO bookDTO = getBookDTO();
-        when(getBookService.get(1l)).thenReturn(bookDTO);
+        BookDtoV1 bookDtoV1 = getBookDTO();
+        when(getBookService.get(1l)).thenReturn(bookDtoV1);
 
-        BookDTO book = getBookService.get(1l);
+        BookDtoV1 book = getBookService.get(1l);
         assertAll("book",
-                () -> assertThat(book.getId(), is(bookDTO.getId())),
-                () -> assertThat(book.getTitle(), is(bookDTO.getTitle())),
-                () -> assertThat(book.getSummary(), is(bookDTO.getSummary())),
-                () -> assertThat(book.getAuthor(), is(bookDTO.getAuthor())),
-                () -> assertThat(book.getIsbn(), is(bookDTO.getIsbn())),
-                () -> assertThat(book.getYear(), is(bookDTO.getYear())));
+                () -> assertThat(book.getId(), is(bookDtoV1.getId())),
+                () -> assertThat(book.getTitle(), is(bookDtoV1.getTitle())),
+                () -> assertThat(book.getSummary(), is(bookDtoV1.getSummary())),
+                () -> assertThat(book.getAuthor(), is(bookDtoV1.getAuthor())),
+                () -> assertThat(book.getIsbn(), is(bookDtoV1.getIsbn())),
+                () -> assertThat(book.getYear(), is(bookDtoV1.getYear())));
     }
 
-    private BookDTO getBookDTO() {
-        BookDTO bookTO = new BookDTO(1l);
+    private BookDtoV1 getBookDTO() {
+        BookDtoV1 bookTO = new BookDtoV1();
+        bookTO.setId(1l);
         bookTO.setTitle("A Pedra do Reino");
         bookTO.setSummary("Romance d'A Pedra do Reino e o Príncipe do Sangue ...");
         bookTO.setAuthor("Ariano Suassuna");

@@ -1,7 +1,7 @@
 package br.com.phoebus.web.library.lending;
 
-import br.com.phoebus.web.library.book.v1.BookDTO;
-import br.com.phoebus.web.library.lending.v1.LendingDTO;
+import br.com.phoebus.web.library.book.v1.BookDtoV1;
+import br.com.phoebus.web.library.lending.v1.LendingDtoV1;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -25,26 +25,28 @@ public class GetLendingServiceTest {
     @Test
     @DisplayName("Deve obter um emprestimo por id")
     void create() throws Exception {
-        LendingDTO lendingDTO = getLendingDTO();
-        lendingDTO.setId(1l);
+        LendingDtoV1 lendingDtoV1 = getLendingDTO();
+        lendingDtoV1.setId(1l);
 
-        when(getLendingService.get(1l)).thenReturn(lendingDTO);
+        when(getLendingService.get(1l)).thenReturn(lendingDtoV1);
 
-        LendingDTO lendingTO = getLendingService.get(1l);
+        LendingDtoV1 lendingTO = getLendingService.get(1l);
 
         assertAll("lending",
-                () -> assertThat(lendingTO.getId(), is(lendingDTO.getId())),
-                () -> assertThat(lendingTO.getUserID(), is(lendingDTO.getUserID())),
-                () -> assertThat(lendingTO.getDays(), is(lendingDTO.getDays())),
-                () -> assertThat(lendingTO.getBooks().size(), is(lendingDTO.getBooks().size())));
+                () -> assertThat(lendingTO.getId(), is(lendingDtoV1.getId())),
+                () -> assertThat(lendingTO.getUserID(), is(lendingDtoV1.getUserID())),
+                () -> assertThat(lendingTO.getDays(), is(lendingDtoV1.getDays())),
+                () -> assertThat(lendingTO.getBooks().size(), is(lendingDtoV1.getBooks().size())));
     }
 
-    private LendingDTO getLendingDTO() {
-        LendingDTO lendingDTO = new LendingDTO();
-        lendingDTO.setUserID(1l);
-        lendingDTO.setDays(7);
-        lendingDTO.setBooks(Arrays.asList(new BookDTO(1l)));
+    private LendingDtoV1 getLendingDTO() {
+        LendingDtoV1 lendingDtoV1 = new LendingDtoV1();
+        lendingDtoV1.setUserID(1l);
+        lendingDtoV1.setDays(7);
+        BookDtoV1 bookDtoV1 = new BookDtoV1();
+        bookDtoV1.setId(1l);
+        lendingDtoV1.setBooks(Arrays.asList(bookDtoV1));
 
-        return lendingDTO;
+        return lendingDtoV1;
     }
 }

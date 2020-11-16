@@ -1,6 +1,6 @@
 package br.com.phoebus.web.library.lending;
 
-import br.com.phoebus.web.library.lending.v1.LendingDTO;
+import br.com.phoebus.web.library.lending.v1.LendingDtoV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,9 +13,9 @@ public class DeleteLendingServiceImpl implements DeleteLendingService {
 
     @Transactional
     @Override
-    public void delete(LendingDTO lendingDTO) throws Exception {
+    public void delete(LendingDtoV1 lendingDtoV1) throws Exception {
         Lending lending = new Lending();
-        lending.setId(lendingDTO.getId());
+        lending.setId(lendingDtoV1.getId());
 
         lendingRepository.delete(lending);
     }
