@@ -6,6 +6,7 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import javax.persistence.*;
 
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor

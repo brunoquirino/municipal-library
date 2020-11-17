@@ -2,12 +2,16 @@ package br.com.phoebus.web.library.lending;
 
 import br.com.phoebus.web.library.book.v1.BookDtoV1;
 import br.com.phoebus.web.library.lending.v1.LendingDtoV1;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,32 +20,41 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@ExtendWith(MockitoExtension.class)
 public class ListLendingServiceTest {
 
     @Mock
-    private ListLendingService listLendingService;
+    private LendingRepository lendingRepository;
+
+    private ListLendingService service;
+
+    @BeforeEach
+    public void setUp() {
+        this.service = new ListLendingServiceImpl(lendingRepository);
+    }
 
     @Test
     @DisplayName("Deve obter um emprestimo por id")
     void create() throws Exception {
-        List<LendingDtoV1> list = Arrays.asList(getLendingDTO());
-        when(listLendingService.listAll()).thenReturn(list);
+        BookDtoV1 book = new BookDtoV1();
+        book.setId(1l);
+        LendingDtoV1 lendingDtoV1 = LendingDtoV1.builder()
+                .id(1l)
+                .days(7)
+                .userID(1l)
+                .dateDelivery(LocalDate.now())
+                .books(Arrays.asList(book))
+                .build();
 
-        final List<LendingDtoV1> lendings = listLendingService.listAll();
-        assertAll("lendings", () -> assertThat(lendings.size(), is(1)));
-    }
+        when(lendingRepository.findAll()).thenReturn(Arrays.asList(lendingDtoV1.to()));
 
-    private LendingDtoV1 getLendingDTO() {
-        LendingDtoV1 lendingDtoV1 = new LendingDtoV1();
-        lendingDtoV1.setId(1l);
-        lendingDtoV1.setUserID(1l);
-        lendingDtoV1.setDays(7);
-        BookDtoV1 bookDtoV1 = new BookDtoV1();
-        bookDtoV1.setId(1l);
-        lendingDtoV1.setBooks(Arrays.asList(bookDtoV1));
-
-        return lendingDtoV1;
+        List<LendingDtoV1> lendings = service.listAll();
+        LendingDtoV1 find = lendings.get(0);
+        assertAll("lendings",
+                () -> assertThat(lendings.size(), is(1)),
+                () -> assertThat(find.getUserID(), is(1l)),
+                () -> assertThat(find.getDays(), is(7)),
+                () -> assertThat(find.getDateDelivery(), is(LocalDate.now())),
+                () -> assertThat(find.getBooks().size(), is(1)));
     }
 }

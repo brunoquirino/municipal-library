@@ -19,6 +19,15 @@ public class UserDtoV1 {
 
     private String phone;
 
+    public User to() {
+        return User.builder()
+                .id(id)
+                .name(name)
+                .age(age)
+                .phone(phone)
+                .build();
+    }
+
     public static UserDtoV1 from(User user) {
         if (user == null) {
             return null;

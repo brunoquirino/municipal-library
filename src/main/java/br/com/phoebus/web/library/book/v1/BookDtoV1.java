@@ -29,6 +29,18 @@ public class BookDtoV1 implements Serializable {
 
     private Long lendingID;
 
+    public Book to() {
+        return Book.builder()
+                .id(id)
+                .title(title)
+                .summary(summary)
+                .author(author)
+                .isbn(isbn)
+                .lendingID(lendingID)
+                .year(year)
+                .build();
+    }
+
     public static BookDtoV1 from(Book book) {
         if (book == null) {
             return null;

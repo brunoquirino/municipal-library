@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
@@ -39,8 +40,7 @@ public class Lending extends AbstractPersistable<Long> {
     @Column(name = "date_devolution")
     private LocalDate dateDevolution;
 
-    @OneToMany(mappedBy = "lending", fetch = FetchType.EAGER, cascade = { CascadeType.MERGE, CascadeType.PERSIST })
+    @OneToMany(mappedBy = "lending", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private List<Book> books;
-
 
 }

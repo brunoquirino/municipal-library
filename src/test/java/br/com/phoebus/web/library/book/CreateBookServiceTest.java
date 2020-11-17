@@ -1,51 +1,54 @@
 package br.com.phoebus.web.library.book;
 
 import br.com.phoebus.web.library.book.v1.BookDtoV1;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.Mockito.when;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.Mockito.verify;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@ExtendWith(MockitoExtension.class)
 public class CreateBookServiceTest {
 
     @Mock
-    private CreateBookService createBookService;
+    private BookRepository bookRepository;
+
+    private CreateBookService service;
+
+    @BeforeEach
+    public void setUp() {
+        service = new CreateBookServiceImpl(bookRepository);
+    }
 
     @Test
     @DisplayName("Deve criar um book")
     void create() throws Exception {
-        BookDtoV1 bookDtoV1 = getBookDTO();
-        BookDtoV1 bookDtoV1Return = getBookDTO();
+        BookDtoV1 newBook = BookDtoV1.builder()
+                .title("A Pedra do Reino")
+                .summary("Romance d'A Pedra do Reino e o Príncipe do Sangue ...")
+                .author("Ariano Suassuna")
+                .isbn("ABC123456")
+                .year(1950)
+                .build();
 
-        when(createBookService.create(bookDtoV1)).thenReturn(bookDtoV1Return);
+        service.create(newBook);
 
-        BookDtoV1 book = createBookService.create(bookDtoV1);
+        ArgumentCaptor<Book> book = ArgumentCaptor.forClass(Book.class);
+        verify(bookRepository).save(book.capture());
+        Book saved = book.getValue();
+
         assertAll("book",
-                () -> assertThat(book.getId(), is(bookDtoV1.getId())),
-                () -> assertThat(book.getTitle(), is(bookDtoV1.getTitle())),
-                () -> assertThat(book.getSummary(), is(bookDtoV1.getSummary())),
-                () -> assertThat(book.getAuthor(), is(bookDtoV1.getAuthor())),
-                () -> assertThat(book.getIsbn(), is(bookDtoV1.getIsbn())),
-                () -> assertThat(book.getYear(), is(bookDtoV1.getYear())));
-    }
-
-    private BookDtoV1 getBookDTO() {
-        BookDtoV1 bookTO = new BookDtoV1();
-        bookTO.setId(1l);
-        bookTO.setTitle("A Pedra do Reino");
-        bookTO.setSummary("Romance d'A Pedra do Reino e o Príncipe do Sangue ...");
-        bookTO.setAuthor("Ariano Suassuna");
-        bookTO.setIsbn("ABC123456");
-        bookTO.setYear(1950);
-
-        return bookTO;
+                () -> assertThat(saved.getTitle(), is("A Pedra do Reino")),
+                () -> assertThat(saved.getSummary(), is("Romance d'A Pedra do Reino e o Príncipe do Sangue ...")),
+                () -> assertThat(saved.getAuthor(), is("Ariano Suassuna")),
+                () -> assertThat(saved.getIsbn(), is("ABC123456")),
+                () -> assertThat(saved.getYear(), is(1950)));
     }
 }

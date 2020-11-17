@@ -1,11 +1,12 @@
 package br.com.phoebus.web.library.book;
 
 import br.com.phoebus.web.library.book.v1.BookDtoV1;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,32 +16,41 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@ExtendWith(MockitoExtension.class)
 public class ListBookServiceTest {
 
     @Mock
-    private ListBookService listBookService;
+    private BookRepository bookRepository;
+
+    private ListBookService service;
+
+    @BeforeEach
+    public void setUp() {
+        this.service = new ListBookServiceImpl(bookRepository);
+    }
 
     @Test
     @DisplayName("Deve retornar uma lista de books")
     void list() throws Exception {
-        List<BookDtoV1> lista = Arrays.asList(getBookDTO());
+        BookDtoV1 bookDtoV1 = BookDtoV1.builder()
+                .id(1l)
+                .title("A Pedra do Reino")
+                .summary("Romance d'A Pedra do Reino e o Príncipe do Sangue ...")
+                .author("Ariano Suassuna")
+                .isbn("ABC123456")
+                .year(1950).build();
 
-        when(listBookService.listAll()).thenReturn(lista);
-        List<BookDtoV1> books = listBookService.listAll();
-        assertAll("books", () -> assertThat(books.size(), is(1)));
-    }
+        when(bookRepository.findAll()).thenReturn(Arrays.asList(bookDtoV1.to()));
 
-    private BookDtoV1 getBookDTO() {
-        BookDtoV1 bookTO = new BookDtoV1();
-        bookTO.setId(1l);
-        bookTO.setTitle("A Pedra do Reino");
-        bookTO.setSummary("Romance d'A Pedra do Reino e o Príncipe do Sangue ...");
-        bookTO.setAuthor("Ariano Suassuna");
-        bookTO.setIsbn("ABC123456");
-        bookTO.setYear(1950);
-
-        return bookTO;
+        List<BookDtoV1> books = service.listAll();
+        BookDtoV1 bookDtoV11 = books.get(0);
+        assertAll("books",
+                () -> assertThat(books.size(), is(1)),
+                () -> assertThat(bookDtoV1.getTitle(), is("A Pedra do Reino")),
+                () -> assertThat(bookDtoV1.getSummary(), is("Romance d'A Pedra do Reino e o Príncipe do Sangue ...")),
+                () -> assertThat(bookDtoV1.getAuthor(), is("Ariano Suassuna")),
+                () -> assertThat(bookDtoV1.getIsbn(), is("ABC123456")),
+                () -> assertThat(bookDtoV1.getYear(), is(1950))
+        );
     }
 }

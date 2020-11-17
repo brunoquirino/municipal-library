@@ -32,6 +32,22 @@ public class LendingDtoV1 implements Serializable {
 
     private Long userID;
 
+    public Lending to() {
+        List<Book> books = new ArrayList<>();
+        for (BookDtoV1 bookDtoV1 : this.books) {
+            books.add(bookDtoV1.to());
+        }
+
+        return Lending.builder()
+                .id(id)
+                .dateDelivery(dateDelivery)
+                .dateDevolution(dateDevolution)
+                .userID(userID)
+                .days(days)
+                .books(books)
+                .build();
+    }
+
     public static LendingDtoV1 from(Lending lending) {
         if (lending == null) {
             return null;

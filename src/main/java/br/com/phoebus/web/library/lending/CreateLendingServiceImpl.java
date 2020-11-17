@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class CreateLendingServiceImpl implements CreateLendingService {
 
@@ -24,7 +25,6 @@ public class CreateLendingServiceImpl implements CreateLendingService {
 
     private final BookRepository bookRepository;
 
-    @Transactional
     @Override
     public LendingDtoV1 create(LendingDtoV1 lendingDtoV1) throws Exception {
         Lending lending = new Lending();
@@ -49,7 +49,7 @@ public class CreateLendingServiceImpl implements CreateLendingService {
         }
         lending.setBooks(books);
 
-        lending = lendingRepository.save(lending);
+        lendingRepository.save(lending);
 
         return LendingDtoV1.from(lending);
     }

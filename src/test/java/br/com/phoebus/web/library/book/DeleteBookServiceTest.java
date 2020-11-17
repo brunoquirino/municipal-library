@@ -1,20 +1,27 @@
 package br.com.phoebus.web.library.book;
 
 import br.com.phoebus.web.library.book.v1.BookDtoV1;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@ExtendWith(MockitoExtension.class)
 public class DeleteBookServiceTest {
 
     @Mock
-    private DeleteBookService deleteBookService;
+    private BookRepository bookRepository;
+
+    private DeleteBookService service;
+
+    @BeforeEach
+    public void setUp() {
+        this.service = new DeleteBookServiceImpl(bookRepository);
+    }
 
     @Test
     @DisplayName("Deve deletar um book")
@@ -22,8 +29,7 @@ public class DeleteBookServiceTest {
         BookDtoV1 bookDtoV1 = new BookDtoV1();
         bookDtoV1.setId(1l);
 
-        doNothing().when(deleteBookService).delete(bookDtoV1);
-
-        deleteBookService.delete(bookDtoV1);
+        service.delete(bookDtoV1);
+        verify(bookRepository).delete(bookDtoV1.to());
     }
 }

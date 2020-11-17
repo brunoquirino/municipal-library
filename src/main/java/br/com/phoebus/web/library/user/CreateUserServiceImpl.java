@@ -6,12 +6,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class CreateUserServiceImpl implements CreateUserService {
 
     private final UserRepository userRepository;
 
-    @Transactional
     @Override
     public UserDtoV1 create(UserDtoV1 userDtoV1) throws Exception {
         User user = new User();
@@ -19,7 +19,8 @@ public class CreateUserServiceImpl implements CreateUserService {
         user.setAge(userDtoV1.getAge());
         user.setPhone(userDtoV1.getPhone());
 
-        user = userRepository.save(user);
+        userRepository.save(user);
+
         return UserDtoV1.from(user);
     }
 }

@@ -6,12 +6,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class DeleteLendingServiceImpl implements DeleteLendingService {
 
     private final LendingRepository lendingRepository;
 
-    @Transactional
     @Override
     public void delete(LendingDtoV1 lendingDtoV1) throws Exception {
         Lending lending = new Lending();

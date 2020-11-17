@@ -1,46 +1,51 @@
 package br.com.phoebus.web.library.user;
 
 import br.com.phoebus.web.library.user.v1.UserDtoV1;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@ExtendWith(MockitoExtension.class)
 public class CreateUserServiceTest {
 
     @Mock
-    private CreateUserService createUserService;
+    private UserRepository userRepository;
+
+    private CreateUserService service;
+
+    @BeforeEach
+    public void setUp() {
+        this.service = new CreateUserServiceImpl(userRepository);
+    }
 
     @Test
     @DisplayName("Deve incluir um user")
     void create() throws Exception {
-        UserDtoV1 userDtoV1 = getUserDTO();
-        UserDtoV1 userDtoV1Return = getUserDTO();
-        userDtoV1Return.setId(1l);
+        UserDtoV1 newUser = UserDtoV1.builder()
+                .name("Teste")
+                .age(30)
+                .phone("88888888888888")
+                .build();
 
-        when(createUserService.create(userDtoV1)).thenReturn(userDtoV1Return);
+        service.create(newUser);
 
-        UserDtoV1 user = createUserService.create(userDtoV1);
+        ArgumentCaptor<User> user = ArgumentCaptor.forClass(User.class);
+        verify(userRepository).save(user.capture());
+        User saved = user.getValue();
+
         assertAll("user",
-                () -> assertThat(user.getId(), is(userDtoV1Return.getId())),
-                () -> assertThat(user.getName(), is(userDtoV1Return.getName())),
-                () -> assertThat(user.getAge(), is(userDtoV1Return.getAge())),
-                () -> assertThat(user.getPhone(), is(userDtoV1Return.getPhone())));
-    }
-
-    private UserDtoV1 getUserDTO() {
-        UserDtoV1 user = new UserDtoV1();
-        user.setName("Teste");
-        user.setAge(30);
-        user.setPhone("88888888888888");
-        return user;
+                () -> assertThat(saved.getName(), is(newUser.getName())),
+                () -> assertThat(saved.getAge(), is(newUser.getAge())),
+                () -> assertThat(saved.getPhone(), is(newUser.getPhone())
+                ));
     }
 }
