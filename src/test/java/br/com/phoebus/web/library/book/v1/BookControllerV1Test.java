@@ -1,29 +1,23 @@
 package br.com.phoebus.web.library.book.v1;
 
-import br.com.phoebus.web.library.book.GetBookService;
-import com.google.gson.Gson;
-import org.junit.jupiter.api.BeforeEach;
+import br.com.phoebus.web.library.book.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -31,133 +25,107 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class BookControllerV1Test {
 
     @Autowired
-    private MockMvc mock;
+    private MockMvc mockMvc;
 
-    @Mock
-    private BookControllerV1 bookControllerV1;
+    @MockBean
+    private CreateBookService createBookService;
 
-    @Mock
-    private GetBookService getBookServiceMock;
+    @MockBean
+    private UpdateBookService updateBookService;
 
-    @BeforeEach
-    public void setUp() {
+    @MockBean
+    private DeleteBookService deleteBookService;
+
+    @MockBean
+    private ListBookService listBookService;
+
+    @MockBean
+    private GetBookService getBookService;
+
+    public static String readJson(String file) throws Exception {
+        byte[] bytes = Files.readAllBytes(Paths.get("src/test/resources/json/" + file).toAbsolutePath());
+        return new String(bytes);
     }
 
     @Test
     @DisplayName("Deve incluir um livro")
     void create() throws Exception {
-        BookDtoV1 bookTO = getBookDTO();
-        BookDtoV1 bookDtoV1Return = getBookDTO();
+        BookDtoV1 bookDtoV1 = getBookDTO();
 
-        assertNotNull(bookControllerV1);
-        when(bookControllerV1.create(bookTO)).thenReturn(bookDtoV1Return);
-
-        BookDtoV1 book = bookControllerV1.create(bookTO);
-        assertAll("book",
-                () -> assertThat(book.getId(), is(1l)),
-                () -> assertThat(book.getTitle(), is("A Pedra do Reino")),
-                () -> assertThat(book.getSummary(), is("Romance d'A Pedra do Reino e o Príncipe do Sangue ...")),
-                () -> assertThat(book.getAuthor(), is("Ariano Suassuna")),
-                () -> assertThat(book.getIsbn(), is("ABC123456")),
-                () -> assertThat(book.getYear(), is(1950)));
-
-        String content = new Gson().toJson(bookTO);
-        this.mock.perform(post("/books")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(content))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().json(content));
-    }
-
-    @Test
-    @DisplayName("Deve Listar todos os livros")
-    void listAll() throws Exception {
-        assertNotNull(bookControllerV1);
-
-        when(bookControllerV1.listAll()).thenReturn(new ArrayList<BookDtoV1>());
-
-        final List<BookDtoV1> books = bookControllerV1.listAll();
-        assertAll("books", () -> assertThat(books.size(), is(0)));
-
-        this.mock.perform(get("/books")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().json(new Gson().toJson(Arrays.asList(new BookDtoV1()))));
-    }
-
-    @Test
-    @DisplayName("Deve obter book por id")
-    void getBook() throws Exception {
-        assertNotNull(bookControllerV1);
-
-        when(bookControllerV1.get(1l)).thenReturn(getBookDTO());
-
-        BookDtoV1 bookTO = bookControllerV1.get(1l);
-        assertAll("book",
-                () -> assertThat(bookTO.getId(), is(1l)),
-                () -> assertThat(bookTO.getTitle(), is("A Pedra do Reino")),
-                () -> assertThat(bookTO.getSummary(), is("Romance d'A Pedra do Reino e o Príncipe do Sangue ...")),
-                () -> assertThat(bookTO.getAuthor(), is("Ariano Suassuna")),
-                () -> assertThat(bookTO.getIsbn(), is("ABC123456")),
-                () -> assertThat(bookTO.getYear(), is(1950)));
-
-        this.mock.perform(get("/books/{1}", 1l)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().json(new Gson().toJson(new BookDtoV1())));
-    }
-
-    @Test
-    @DisplayName("Deve deletar um book")
-    void deleteBook() throws Exception {
-        BookDtoV1 bookDtoV1 = new BookDtoV1();
-        bookDtoV1.setId(1l);
-
-        assertNotNull(this.bookControllerV1);
-        when(this.getBookServiceMock.get(anyLong())).thenReturn(bookDtoV1);
-        doNothing().when(this.bookControllerV1).delete(bookDtoV1);
-
-        String content = new Gson().toJson(bookDtoV1);
-        this.mock.perform(delete("/books")
-                .content(content)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
+        this.mockMvc.perform(post("/v1/books")
+                .flashAttr("book", bookDtoV1)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(readJson("book.json")))
                 .andExpect(status().isOk());
 
-        this.bookControllerV1.delete(bookDtoV1);
+        verify(createBookService).create(any(BookDtoV1.class));
     }
 
     @Test
     @DisplayName("Deve alterar um book")
     void update() throws Exception {
         BookDtoV1 bookDtoV1 = getBookDTO();
-        bookDtoV1.setId(1l);
 
-        assertNotNull(this.bookControllerV1);
-        when(this.bookControllerV1.get(1l)).thenReturn(bookDtoV1);
-        doNothing().when(this.bookControllerV1).update(bookDtoV1);
-
-        String content = new Gson().toJson(bookDtoV1);
-        this.mock.perform(put("/books")
-                .content(content)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
+        this.mockMvc.perform(put("/v1/books")
+                .flashAttr("book", bookDtoV1)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(readJson("book.json")))
                 .andExpect(status().isOk());
 
-        this.bookControllerV1.update(bookDtoV1);
+        verify(updateBookService).update(any(BookDtoV1.class));
+    }
+
+    @Test
+    @DisplayName("Deve deletar um book")
+    void deleteBook() throws Exception {
+        BookDtoV1 bookDtoV1 = getBookDTO();
+
+        this.mockMvc.perform(delete("/v1/books")
+                .flashAttr("book", bookDtoV1)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(readJson("book.json")))
+                .andExpect(status().isOk());
+
+        verify(deleteBookService).delete(any(BookDtoV1.class));
+    }
+
+    @Test
+    @DisplayName("Deve Listar todos os livros")
+    void listAll() throws Exception {
+        BookDtoV1 book = getBookDTO();
+        List<BookDtoV1> books = Arrays.asList(book);
+
+        when(listBookService.listAll()).thenReturn(books);
+
+        mockMvc.perform(
+                get("/v1/books")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .flashAttr("books", book)
+        ).andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Deve obter book por id")
+    void getBook() throws Exception {
+        BookDtoV1 book = getBookDTO();
+
+        when(getBookService.get(1l)).thenReturn(book);
+
+        mockMvc.perform(
+                get("/v1/books/{id}", 1l)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .flashAttr("books", book)
+        ).andExpect(status().isOk());
     }
 
     private BookDtoV1 getBookDTO() {
-        BookDtoV1 bookTO = new BookDtoV1();
-        bookTO.setId(1l);
-        bookTO.setTitle("A Pedra do Reino");
-        bookTO.setSummary("Romance d'A Pedra do Reino e o Príncipe do Sangue ...");
-        bookTO.setAuthor("Ariano Suassuna");
-        bookTO.setIsbn("ABC123456");
-        bookTO.setYear(1950);
+        BookDtoV1 bookTO = BookDtoV1.builder()
+                .id(1l)
+                .title("A Pedra do Reino")
+                .summary("Romance d'A Pedra do Reino e o Príncipe do Sangue ...")
+                .author("Ariano Suassuna")
+                .isbn("ABC123456")
+                .year(1950).build();
 
         return bookTO;
     }

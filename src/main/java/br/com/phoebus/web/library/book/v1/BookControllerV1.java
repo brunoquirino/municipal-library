@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/books", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/v1/books", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 public class BookControllerV1 {
 
     private final CreateBookService createBookService;
@@ -24,9 +24,14 @@ public class BookControllerV1 {
         return createBookService.create(bookDtoV1);
     }
 
-    @GetMapping
-    public List<BookDtoV1> listAll() {
-        return listBookService.listAll();
+    @PutMapping
+    public void update(@RequestBody BookDtoV1 bookDtoV1) throws Exception {
+        updateBookService.update(bookDtoV1);
+    }
+
+    @DeleteMapping
+    public void delete(@RequestBody BookDtoV1 bookDtoV1) throws Exception {
+        deleteBookService.delete(bookDtoV1);
     }
 
     @GetMapping(value = "/{id}")
@@ -34,16 +39,9 @@ public class BookControllerV1 {
         return getBookService.get(id);
     }
 
-    @Transactional
-    @DeleteMapping
-    public void delete(@RequestBody BookDtoV1 bookDtoV1) throws Exception {
-        deleteBookService.delete(bookDtoV1);
-    }
-
-    @Transactional
-    @PutMapping
-    public void update(@RequestBody BookDtoV1 bookDtoV1) throws Exception {
-        updateBookService.update(bookDtoV1);
+    @GetMapping
+    public List<BookDtoV1> listAll() {
+        return listBookService.listAll();
     }
 }
 
