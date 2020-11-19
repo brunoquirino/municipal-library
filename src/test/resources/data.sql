@@ -1,28 +1,10 @@
-DROP TABLE IF EXISTS livros;
-DROP TABLE IF EXISTS emprestimos;
-DROP TABLE IF EXISTS usuarios;
+DROP TABLE IF EXISTS lendings;
 
-CREATE TABLE usuarios (
+CREATE TABLE lendings (
     id long primary key AUTO_INCREMENT,
-    nome VARCHAR(250) NOT NULL,
-    idade integer NOT NULL,
-    telefone VARCHAR(250) NOT NULL
-);
-
-CREATE TABLE emprestimos (
-    id long primary key AUTO_INCREMENT,
-    usuario_id long not null references usuarios(id),
-    dias integer not null,
-    data_entrega datetime,
-    data_devolucao datetime
-);
-
-CREATE TABLE livros (
-    id long primary key AUTO_INCREMENT,
-    titulo VARCHAR(250) NOT NULL,
-    resumo TEXT NOT NULL,
-    isbn VARCHAR(45) NOT NULL,
-    autor VARCHAR(255),
-    ano integer,
-    emprestimo_id long references emprestimos(id)
+    uuid uuid not null default random_uuid(),
+    user_id text not null,
+    days integer not null,
+    date_delivery datetime,
+    date_devolution datetime
 );
