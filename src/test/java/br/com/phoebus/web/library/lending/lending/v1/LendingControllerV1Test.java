@@ -68,6 +68,7 @@ public class LendingControllerV1Test {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.days", is(7)))
+                .andExpect(jsonPath("$.userID", is(lendingDtoV1.getUserID())))
                 .andExpect(jsonPath("$.books", hasSize(1)));
 
         verify(createLendingService).create(any(LendingDtoV1.class));
